@@ -10,10 +10,10 @@ public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userRoleId;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     private Role role;
 

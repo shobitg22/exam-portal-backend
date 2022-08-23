@@ -7,8 +7,11 @@ import com.exam.examserver.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizServiceImpl implements QuizService {
@@ -33,19 +36,25 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<Quiz> getAllQuiz() {
-        return quizRepo.findAll();
+
+        List<Quiz> quizList= quizRepo.findAll();
+        return quizList.stream().filter(quiz -> quiz.getIsActive()).collect(Collectors.toList());
     }
 
     @Override
     public Quiz getQuizById(Long id) {
-        return quizRepo.getById(id);
+        Quiz quiz= quizRepo.getById(id);
+        if (quiz.getIsActive())
+            return quiz;
+        return null;
     }
 
     @Override
     public Set<Quiz> getQuizByCategory(Long id) {
         Category category = new Category();
         category.setCId(id);
-        return quizRepo.findByCategory(category);
+        Set<Quiz> quizSet = quizRepo.findByCategory(category);
+        return  quizSet.stream().filter(quiz -> quiz.getIsActive()).collect(Collectors.toSet());
     }
 
     @Override

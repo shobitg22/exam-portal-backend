@@ -24,16 +24,8 @@ public class UserController {
     @PostMapping("/")
     public User addNewUser(@RequestBody User user)
     {
-
-        List<UserRole> userRoles = new ArrayList<>();
-        UserRole userRole=new UserRole();
-        Role role = new Role();
-        role.setRoleName("NORMAL");
-        userRole.setUser(user);
-        userRole.setRole(role);
-        userRoles.add(userRole);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return this.userService.createUser(user,userRoles);
+        return this.userService.createUser(user);
     }
 
     @GetMapping("/{username}")

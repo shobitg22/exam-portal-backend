@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Override
-    public User createUser(User user, List<UserRole> userRoleSet) {
+    public User createUser(User user) {
         User existingUser =null;
         existingUser=userRepository.findByUserName(user.getUserName());
         if(existingUser!=null){
@@ -35,13 +35,23 @@ public class UserServiceImpl implements UserService {
             }
         }
         else {
-            for(UserRole userRole:userRoleSet)
+            List<UserRole> userRoleSet = new ArrayList<>();
+
+            UserRole userRole = new UserRole();
+            userRole.setUser(user);
+            Role role=validateRoleName("NORMAL");
+            if(role==null)
             {
-//               Role role = roleRepository.findByRoleName(userRole.getRole().getRoleName());
-//               if(role!=null && role.getRoleName()!=userRole.getRole().getRoleName()) {
-                   roleRepository.save(userRole.getRole());
-//               }
+             Role newRole = new Role();
+             newRole.setRoleName("NORMAL");
+             userRole.setRole(newRole);
+             newRole.setRoles(userRoleSet);
             }
+            else {
+                userRole.setRole(role);
+                role.setRoles(userRoleSet);
+            }
+            userRoleSet.add(userRole);
             user.setRoles(userRoleSet);
             existingUser = userRepository.save(user);
 
@@ -71,6 +81,14 @@ public class UserServiceImpl implements UserService {
          }
         updatedUser.setId(optionalUser.get().getId());
         return userRepository.save(updatedUser);
+    }
+
+    @Override
+    public Role validateRoleName(String roleName) {
+
+        Role role=null;
+        role=roleRepository.findByRoleName(roleName);
+        return role;
     }
 
 //    @Override

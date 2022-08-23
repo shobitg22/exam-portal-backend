@@ -49,4 +49,12 @@ public class Role {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+    public List<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<UserRole> roles) {
+        this.roles = roles;
+    }
 }
